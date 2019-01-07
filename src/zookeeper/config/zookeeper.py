@@ -33,9 +33,9 @@ class Zookeeper:
     def validation_pre(self):
         zkid_visited = dict()
         for host_config in self.cluster_configuration["machine-list"]:
-            if "pai-master" in host_config and host_config["pai-master"] == "true":
+            if "zookeeper" in host_config and host_config["zookeeper"] == "true":
                 if "zkid" not in host_config:
-                    return False, "zkid is missing in your pai-master machine [{0}] .".format(host_config["hostip"])
+                    return False, "zkid is missing in your zookeeper machine [{0}] .".format(host_config["hostip"])
                 if host_config["zkid"] in zkid_visited and zkid_visited[host_config["zkid"]] is True :
                     return False, "Duplicated zkid [zkid: {0}]. ".format(host_config["zkid"])
                 zkid_visited[host_config["zkid"]] = True

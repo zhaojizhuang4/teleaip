@@ -60,6 +60,7 @@ machine-list:
       #password: password (Optional)
       k8s-role: master
       dashboard: "true"
+      zookeeper: "true"
       zkid: "1"
       pai-master: "true"
       

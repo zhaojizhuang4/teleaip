@@ -41,9 +41,10 @@ machine-list:
   {%- if loop.index == 1 %}
     k8s-role: master
     etcdid: etcdid1
-    zkid: "1"
     dashboard: "true"
     pai-master: "true"
+    zookeeper: "true"
+    zkid: "1"
   {%- else %}
     k8s-role: worker
     pai-worker: "true"

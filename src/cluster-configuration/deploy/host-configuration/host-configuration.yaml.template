@@ -23,13 +23,16 @@
     {% if 'zkid' in cluster_cfg['machine']['machine-list'][host] -%}
     zkid: "{{ cluster_cfg['machine']['machine-list'][host]['zkid'] }}"
     {% endif -%}
+    {% if 'zookeeper' in cluster_cfg['machine']['machine-list'][host] -%}
+    zkid: "{{ cluster_cfg['machine']['machine-list'][host]['zookeeper'] }}"
+    {% endif -%}
     {% if 'gpu' in cluster_cfg['machine']['machine-sku'][cluster_cfg['machine']['machine-list'][host]['machine-type']] -%}
     machinetype: gpu
     {% endif -%}
     {% if 'pai-master' in cluster_cfg['machine']['machine-list'][host] -%}
-    pai-master: "cluster_cfg['machine']['machine-list'][host]['pai-master']"
+    pai-master: "{{cluster_cfg['machine']['machine-list'][host]['pai-master']}}"
     {% endif -%}
     {% if 'pai-worker' in cluster_cfg['machine']['machine-list'][host] -%}
-    pai-worker: "cluster_cfg['machine']['machine-list'][host]['pai-worker']"
+    pai-worker: "{{cluster_cfg['machine']['machine-list'][host]['pai-worker']}}"
     {% endif -%}
 {% endfor %}
