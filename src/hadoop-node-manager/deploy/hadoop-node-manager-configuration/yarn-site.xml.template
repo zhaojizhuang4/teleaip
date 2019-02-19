@@ -292,6 +292,17 @@
     <value>900000</value>
   </property>
 
+  <property>
+    <description>
+    No. of ms to wait between sending a SIGTERM and SIGKILL to a container.
+    </description>
+    <name>yarn.nodemanager.sleep-delay-before-sigkill.ms</name>
+    <value>-1</value>
+  </property>
+
+
+
+
 <property>
  <name>yarn.nodemanager.docker-container-executor.exec-name</name>
   <value>/usr/bin/docker</value>

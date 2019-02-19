@@ -32,6 +32,9 @@ function exit_handler()
   rc=$?
   printf "[DEBUG] EXIT signal received in yarn container, performing clean up action...\n"
 
+  printf "[DEBUG] Sleeping..."
+  sleep infinity
+
   printf "[DEBUG] Write exit code $rc to file /var/lib/hadoopdata/nm-local-dir/nmPrivate/$APP_ID/$CONTAINER_ID/$CONTAINER_ID.pid.exitcode.\n"
   echo $rc > "/var/lib/hadoopdata/nm-local-dir/nmPrivate/$APP_ID/$CONTAINER_ID/$CONTAINER_ID.pid.exitcode"
 
