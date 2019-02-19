@@ -26,14 +26,16 @@ export PAI_DEFAULT_FS_URI={{ hdfsUri }}
 exec 13>$LAUNCHER_LOG_DIR/YarnContainerDebug.log
 BASH_XTRACEFD=13
 
+function sigterm_handler() {
+  printf "[DEBUG] Sleeping"
+  sleep infinity
+}
+
 
 function exit_handler()
 {
   rc=$?
   printf "[DEBUG] EXIT signal received in yarn container, performing clean up action...\n"
-
-  printf "[DEBUG] Sleeping..."
-  sleep infinity
 
   printf "[DEBUG] Write exit code $rc to file /var/lib/hadoopdata/nm-local-dir/nmPrivate/$APP_ID/$CONTAINER_ID/$CONTAINER_ID.pid.exitcode.\n"
   echo $rc > "/var/lib/hadoopdata/nm-local-dir/nmPrivate/$APP_ID/$CONTAINER_ID/$CONTAINER_ID.pid.exitcode"
@@ -44,6 +46,7 @@ function exit_handler()
 set -x
 PS4="+[\t] "
 trap exit_handler EXIT
+trap sigterm_handler SIGTERM
 
 
 alive_dir="tmp/pai-root/alive"
