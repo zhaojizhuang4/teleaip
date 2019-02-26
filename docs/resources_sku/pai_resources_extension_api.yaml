@@ -1,0 +1,128 @@
+openapi: '3.0.0'
+info:
+  title: pai_resources_extension
+  description: These APIs provide resource related info of PAI platform.
+  version: 0.0.2
+servers:
+  - url: /api/v1
+paths:
+  /resources/nodes:
+    get:
+      summary: Get the node info of pai platform.
+      responses:
+        '200':
+          description: Return node info of pai platform.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NodeRes' 
+        '401':
+          description: Not authorized.
+        '500':
+          description: Internal error.
+  /resources/skus:
+    get:
+      summary: Get all available skus in pai platform
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: group
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Return all matched sku levels.
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/SkuRes' 
+        '500':
+          description: Internal error.   
+    post:
+      summary: Create a new sku to pai.
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkuReq'
+      responses:
+        '201':
+          description: Sku created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkuRes'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Not authorized.
+        '403':
+          description: The sku group is not allowed to add new sku level.
+        '409':
+          description: Sku name already exists.
+        '500':
+          description: Internal error.  
+
+components:
+  responses:
+    BadRequest:
+      description: Bad request.
+      content:
+        text/plain:
+          schema:
+            type: string
+  schemas:
+    NodeRes:
+      type: object
+      properties:
+        node_type:
+          type: string
+        gpu_type:
+          type: string
+        gpu_num:
+          type: integer
+        cpu_num:
+          type: integer
+        memory:
+          type: integer
+        node_num:
+          type: integer
+    SkuReq:
+      type: object
+      properties:
+        name:
+          type: string
+        gpu_type:
+          type: string
+        gpu_num:
+          type: integer
+        cpu_num:
+          type: integer
+        memory:
+          type: integer   
+    SkuRes:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        gpu_type:
+          type: string
+        gpu_num:
+          type: integer
+        cpu_num:
+          type: integer
+        memory:
+          type: integer
+    
