@@ -297,7 +297,7 @@
     No. of ms to wait between sending a SIGTERM and SIGKILL to a container.
     </description>
     <name>yarn.nodemanager.sleep-delay-before-sigkill.ms</name>
-    <value>-1</value>
+    <value>0</value>
   </property>
 
 
