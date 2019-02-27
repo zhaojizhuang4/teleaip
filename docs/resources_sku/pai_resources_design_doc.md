@@ -36,8 +36,17 @@ For admin users, give them the authority to create, review, update, delete sku s
 | NC12     | Tesla K80 | 2          | 12         | 112 GB |
 | NC6s_v2  | Tesla P100| 1          | 6          | 112 GB |
 
+![image](./images/ui_design1.png)
+![image](./images/ui_design2.png)
+
 5. Besides the sku grid, there will be also exists a ```* num``` field which indicates the number of sku resource unit user will use. 
+
+![image](./images/ui_design3.png)
+
 6. Finally there will be an ```advance``` button lays besided sku grid. After click it, user could edit the detailed info of sku, i.e.   ```cpuNumber```, ```memoryMB```, and ```gpuNumber``` fields. There will be a warning to aware user this will create a custom resources for the task.
+
+![image](./images/ui_design4.png)
+
 - Operator
 1. Almost same as common user
 2. Admin user could check current sku settings and have a instruction about how to edit sku config.
