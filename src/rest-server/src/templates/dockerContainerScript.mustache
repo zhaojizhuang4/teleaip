@@ -182,7 +182,17 @@ env | grep -E "^PAI|PATH|PREFIX|JAVA|HADOOP|NVIDIA|CUDA" > /etc/environment
 function run_user_command()
 {
   printf "%s %s\n\n" "[INFO]" "USER COMMAND START"
-  eval {{ taskData.command }} || exit $?
+  eval {{ taskData.command }}
+  user_command_exitcode=$?
+{{# isDebug }}
+  if [[ $user_command_exitcode -ne 0 ]]; then
+    echo "============================================================================="
+    echo "======   The job container failed, so it will be reserved for 1 week   ======"
+    echo "======          After debugging, please stop the job manually.         ======"
+    echo "============================================================================="
+    sleep 604800
+  fi
+{{/ isDebug }}
   printf "\n%s %s\n\n" "[INFO]" "USER COMMAND END" # job_exporter relay on this exact output, if you are going to change this, remember to change job_exporter also
   exit 0
 }
@@ -202,24 +212,6 @@ else
   wait $user_command_pid
   user_command_exitcode=$?
   echo "job has finished with exit code $user_command_exitcode"
-{{# isDebug }}
-  if [[ $user_command_exitcode -ne 0 ]]; then
-    echo "============================================================================="
-    echo "======   The job container failed, so it will be reserved for 1 week   ======"
-    echo "======          After debugging, please stop the job manually.         ======"
-    echo "============================================================================="
-
-    sleep_time=604800
-    sleep_count=0
-
-    while [ $(( $(date +%s) - $(stat -c %Y /alive/yarn_$PAI_CONTAINER_ID) )) -lt 30 ] && \
-        [ "$sleep_count" -lt "$sleep_time" ]; do
-        sleep 20
-        sleep_count=$((sleep_count+20))
-    done
-
-  fi
-{{/ isDebug }}
   exit $user_command_exitcode
 fi
 
