@@ -191,8 +191,8 @@ function run_user_command()
     echo "======          After debugging, please stop the job manually.         ======"
     echo "============================================================================="
     sleep 604800
+    exit $task_command_exitcode
   fi
-  exit $task_command_exitcode
 {{/ isDebug }}
   printf "\n%s %s\n\n" "[INFO]" "USER COMMAND END" # job_exporter relay on this exact output, if you are going to change this, remember to change job_exporter also
   exit 0
