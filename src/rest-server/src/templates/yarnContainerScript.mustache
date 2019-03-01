@@ -305,8 +305,3 @@ docker run --name $docker_name \
   --entrypoint="" \
    {{ jobData.image }} \
   /bin/bash '/pai/bootstrap/docker_bootstrap.sh'
-
-
-user_command_exitcode=$?
-exit $user_command_exitcode
-
