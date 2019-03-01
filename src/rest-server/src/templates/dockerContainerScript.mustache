@@ -183,15 +183,16 @@ function run_user_command()
 {
   printf "%s %s\n\n" "[INFO]" "USER COMMAND START"
   eval {{ taskData.command }}
-  user_command_exitcode=$?
+  task_command_exitcode=$?
 {{# isDebug }}
-  if [[ $user_command_exitcode -ne 0 ]]; then
+  if [[ $task_command_exitcode -ne 0 ]]; then
     echo "============================================================================="
     echo "======   The job container failed, so it will be reserved for 1 week   ======"
     echo "======          After debugging, please stop the job manually.         ======"
     echo "============================================================================="
     sleep 604800
   fi
+  exit $task_command_exitcode
 {{/ isDebug }}
   printf "\n%s %s\n\n" "[INFO]" "USER COMMAND END" # job_exporter relay on this exact output, if you are going to change this, remember to change job_exporter also
   exit 0
