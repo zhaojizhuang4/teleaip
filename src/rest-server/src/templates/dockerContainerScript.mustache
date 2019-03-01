@@ -184,6 +184,7 @@ function run_user_command()
   printf "%s %s\n\n" "[INFO]" "USER COMMAND START"
   eval {{ taskData.command }}
   task_command_exitcode=$?
+  echo "exit code : $task_command_exitcode"
 {{# isDebug }}
   if [[ $task_command_exitcode -ne 0 ]]; then
     echo "============================================================================="
