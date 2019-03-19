@@ -94,10 +94,24 @@ class DockerCleaner(LoggerMixin):
             self.logger.warning("Kill container {0} due to disk pressure. Container size: {1}".format(containers[0][1], containers[0][0]))
             subprocess.Popen(["docker", "kill", "--signal=10", containers[0][1]])
 
-            # Because docker stop will not immedicately stop container, we can not remove docker image right after stop container
-            #container_image = subprocess.Popen(["docker", "inspect", containers[0][1], r"--format='{{.Image}}'"], stdout=subprocess.PIPE).stdout.readline()
-            #subprocess.Popen(["docker", "image", "rmi", container_image])
-            return True
+            # Because docker stop will not immedicately stop container, check container status until it is exited
+            retries = 0
+            while True:
+                container_status = subprocess.Popen(["docker", "inspect", containers[0][1], "--format", r'{{.State.Status}}'], stdout=subprocess.PIPE)
+                status = container_status.stdout.readlines()[-1].strip()
+                if status == "running":
+                    if retries < 10:
+                        retries += 1
+                        time.sleep(1)
+                    else:
+                        self.logger.error("Timeout when kill Container {0}, container may not be killed.".format(containers[0][1]))
+                        return False
+                elif status == "exited":
+                    subprocess.Popen(["docker", "rm", containers[0][1]], stdout=subprocess.PIPE)
+                    return True
+                else:
+                    self.logger.error("Container {0} in unknown status, status is: {1}".format(containers[0][1], status))
+                    return False
         else:
             return False
 
