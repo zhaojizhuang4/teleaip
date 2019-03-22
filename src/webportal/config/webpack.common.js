@@ -49,6 +49,7 @@ const config = (env, argv) => ({
     layout: './src/app/layout/layout.component.js',
     register: './src/app/user/user-register/user-register.component.js',
     userView: './src/app/user/user-view/user-view.component.js',
+    userBatch: './src/app/user/user-batch/user-batch.component.js',
     login: './src/app/user/user-login/user-login.component.js',
     changePassword: './src/app/user/change-password/change-password.component.js',
     dashboard: './src/app/dashboard/dashboard.component.js',
@@ -244,6 +245,15 @@ const config = (env, argv) => ({
       minify: htmlMinifierOptions,
       cache: true,
       chunks: ['layout', 'userView']
+    }),
+    new HtmlWebpackPlugin({
+      title: title,
+      version: version,
+      filename: 'user-batch.html',
+      template: './src/app/layout/layout.component.ejs',
+      minify: htmlMinifierOptions,
+      cache: true,
+      chunks: ['layout', 'userBatch']
     }),
     new HtmlWebpackPlugin({
       title: title,

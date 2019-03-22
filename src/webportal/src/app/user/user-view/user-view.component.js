@@ -278,4 +278,6 @@ $(document).ready(() => {
   $('#content-wrapper').css({'overflow': 'hidden'});
 });
 
-module.exports = {loadUsers, removeUser, showEditInfo, redirectToAddUser, updateUserVc, updateUserAccount, updateUserGithubPAT};
+//module.exports = {loadUsers, removeUser, showEditInfo, redirectToAddUser, updateUserVc, updateUserAccount, updateUserGithubPAT};
+
+module.exports = {loadUsers, removeUser, showEditInfo, updateUserVc, updateUserAccount, updateUserGithubPAT};

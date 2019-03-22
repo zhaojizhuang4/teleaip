@@ -97,6 +97,7 @@
     "build": "webpack --config webpack.config.js --progress --profile",
     "build:dev": "npm run build -- --debug --devtool eval --output-pathinfo --watch",
     "prestart": "envsub --env-file .env --system src/app/env.js.template dist/scripts/env.js",
+    "debug": "node --inspect-brk=5431 server",
     "start": "node server"
   }
 }
