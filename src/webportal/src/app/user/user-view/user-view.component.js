@@ -78,6 +78,10 @@ const redirectToAddUser = () => {
   window.location.href = '/register.html';
 };
 
+const redirectToBatchAddUser = () => {
+  window.location.href = '/batch-register.html';
+};
+
 const loadUsers = (limit, specifiedVc) => {
   loading.showLoading();
   userAuth.checkToken((token) => {
@@ -254,6 +258,7 @@ const updateUserGithubPAT = (username) => {
 window.loadUsers = loadUsers;
 window.removeUser = removeUser;
 window.redirectToAddUser = redirectToAddUser;
+window.redirectToBatchAddUser = redirectToBatchAddUser;
 window.showEditInfo = showEditInfo;
 window.updateUserVc = updateUserVc;
 window.updateUserAccount = updateUserAccount;

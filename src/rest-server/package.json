@@ -62,6 +62,7 @@
     "lint": "eslint \"src/**/*.js\"",
     "mocha": "mocha --require ./test/setup --ui bdd --recursive --timeout 1000 --exit",
     "start": "node index.js",
+    "debug": "node --inspect-brk=5430 index.js",
     "test": "npm run lint && nyc npm run mocha"
   }
 }
