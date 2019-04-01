@@ -35,6 +35,14 @@ const loading = require('../../job/loading/loading.component');
 const webportalConfig = require('../../config/webportal.config.js');
 const userAuth = require('../user-auth/user-auth.component');
 
+const csvParser = require('papaparse');
+const stripBom = require('strip-bom');
+const columnUsername = 'username';
+const columnPassword = 'password';
+const columnAdmin = 'admin';
+const columnVC = 'virtual cluster';
+const columnGithubPAT = 'githubPAT';
+
 let table = null;
 
 const userViewHtml = userViewComponent({
@@ -78,10 +86,6 @@ const redirectToAddUser = () => {
   window.location.href = '/register.html';
 };
 
-const redirectToBatchAddUser = () => {
-  window.location.href = '/batch-register.html';
-};
-
 const loadUsers = (limit, specifiedVc) => {
   loading.showLoading();
   userAuth.checkToken((token) => {
@@ -110,7 +114,7 @@ const loadUsers = (limit, specifiedVc) => {
               vcName: (data[i].admin === 'true') ? 'All virtual clusters' : data[i].virtualCluster,
               githubPAT: data[i].githubPAT,
               edit: '<button class="btn btn-default btn-sm" onclick="showEditInfo(\'' + data[i].username +
-                    '\',\'' + data[i].admin +'\',\'' + data[i].virtualCluster + '\',\'' + data[i].hasGithubPAT + '\')">Edit</button>',
+                '\',\'' + data[i].admin + '\',\'' + data[i].virtualCluster + '\',\'' + data[i].hasGithubPAT + '\')">Edit</button>',
               remove: removeBtnStyle,
             });
           }
@@ -118,16 +122,16 @@ const loadUsers = (limit, specifiedVc) => {
           table = $('#user-table').dataTable({
             'data': displayDataSet,
             'columns': [
-              {title: 'User Name', data: 'userName'},
-              {title: 'Admin', data: 'admin'},
-              {title: 'Virtual Cluster List', data: 'vcName'},
-              {title: 'Edit', data: 'edit'},
-              {title: 'Remove', data: 'remove'},
+              { title: 'User Name', data: 'userName' },
+              { title: 'Admin', data: 'admin' },
+              { title: 'Virtual Cluster List', data: 'vcName' },
+              { title: 'Edit', data: 'edit' },
+              { title: 'Remove', data: 'remove' },
             ],
             'scrollY': (($(window).height() - 265)) + 'px',
             'lengthMenu': [[20, 50, 100, -1], [20, 50, 100, 'All']],
             'columnDefs': [
-              {type: 'natural', targets: [0, 1, 2, 3, 4]},
+              { type: 'natural', targets: [0, 1, 2, 3, 4] },
             ],
             'deferRender': true,
             'autoWidth': false,
@@ -211,8 +215,8 @@ const updateUserAccount = (username) => {
         if (data.error) {
           alert(data.message);
         } else {
-            alert('Update user basic information successfully');
-            window.location.href = '/user-view.html';
+          alert('Update user basic information successfully');
+          window.location.href = '/user-view.html';
         }
       },
       error: (xhr, textStatus, error) => {
@@ -254,18 +258,83 @@ const updateUserGithubPAT = (username) => {
   });
 };
 
+const downloadTemplate = () => {
+  let csvString = csvParser.unparse([{
+    [columnUsername]: 'student1',
+    [columnPassword]: '111111',
+    [columnAdmin]: false,
+    [columnVC]: 'default',
+    [columnGithubPAT]: '',
+  }])
+  let universalBOM = "\uFEFF";
+  let filename = 'userinfo.csv';
+  let file = new Blob([universalBOM + csvString], { type: 'text/csv;charset=utf-8' });
+  if (window.navigator.msSaveOrOpenBlob) { // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename);
+  } else { // Others
+    let a = document.createElement('a');
+    let url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }
+};
+
+const toBool = (val) => {
+  return (val + '').toLowerCase() === 'true';
+}
+
+const addUser = () => {
+
+}
+
+const importFromCSV = () => {
+  readFile = function (e) {
+    let file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      let contents = e.target.result;
+      let result = csvParser.parse(stripBom(contents), {
+        header: true,
+        skipEmptyLines: true
+      })
+      result.data.forEach(element => {
+        element[columnAdmin] = toBool(element[columnAdmin]);
+      });
+      console.log(result);
+      document.body.removeChild(fileInput);
+    }
+    reader.readAsText(file);
+  }
+  var fileInput = document.createElement("input");
+  fileInput.type = 'file';
+  fileInput.style.display = 'none';
+  fileInput.onchange = readFile;
+  document.body.appendChild(fileInput);
+  fileInput.click();
+};
+
+window.downloadTemplate = downloadTemplate;
+window.importFromCSV = importFromCSV;
 
 window.loadUsers = loadUsers;
 window.removeUser = removeUser;
 window.redirectToAddUser = redirectToAddUser;
-window.redirectToBatchAddUser = redirectToBatchAddUser;
 window.showEditInfo = showEditInfo;
 window.updateUserVc = updateUserVc;
 window.updateUserAccount = updateUserAccount;
 window.updateUserGithubPAT = updateUserGithubPAT;
 
 const resizeContentWrapper = () => {
-  $('#content-wrapper').css({'height': $(window).height() + 'px'});
+  $('#content-wrapper').css({ 'height': $(window).height() + 'px' });
   if (table != null) {
     $('.dataTables_scrollBody').css('height', (($(window).height() - 315)) + 'px');
     table.columns.adjust().draw();
@@ -275,12 +344,12 @@ const resizeContentWrapper = () => {
 $('#content-wrapper').html(userViewHtml);
 
 $(document).ready(() => {
-  window.onresize = function(event) {
+  window.onresize = function (event) {
     resizeContentWrapper();
   };
   $('#sidebar-menu--cluster-view--user-management').addClass('active');
   loadUsers();
-  $('#content-wrapper').css({'overflow': 'hidden'});
+  $('#content-wrapper').css({ 'overflow': 'hidden' });
 });
 
-module.exports = {loadUsers, removeUser, showEditInfo, redirectToAddUser, updateUserVc, updateUserAccount, updateUserGithubPAT};
+module.exports = { loadUsers, removeUser, showEditInfo, redirectToAddUser, updateUserVc, updateUserAccount, updateUserGithubPAT };
