@@ -46,7 +46,7 @@ fi
 if lspci | grep -qE '(Network|Infiniband) controller.*Mellanox.*ConnectX'; then
     echo Infiniband hardware detected
     # Installing InfiniBand drivers and GPU direct RDMA drivers
-    ./install-ib-drivers || exit $?
+    ./install-ib-drivers || sleep 10000
     echo Infiniband drivers is installed successfully.
 else
     echo Infiniband hardware is not detected, skipping driver installation
