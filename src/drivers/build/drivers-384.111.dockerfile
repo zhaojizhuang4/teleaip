@@ -123,7 +123,7 @@ RUN echo "wget -q -O - http://www.mellanox.com/downloads/ofed/MLNX_OFED-$OFED_VE
     git clone https://github.com/NVIDIA/gdrcopy.git
 
 RUN cd $MLNX_OFED_STRING/DEBS && \
-    for dep in libibverbs1 libibverbs-dev ibverbs-utils libmlx4-1 libmlx5-1 librdmacm1 librdmacm-dev libibumad libibumad-devel libibmad libibmad-devel libopensm infiniband-diags mlnx-ofed-kernel-utils; do \
+    for dep in libibverbs1 libibverbs-dev ibverbs-utils libmlx4-1 libmlx5-1 librdmacm1 librdmacm-dev libibumad libibumad-devel libibmad libibmad-devel libopensm infiniband-diags mlnx-ofed-kernel-utils  mlnx-en-modules; do \
         dpkg -i $dep\_*_amd64.deb && \
 	dpkg --contents $dep\_*_amd64.deb | while read i; do \
 	    src="/$(echo $i | cut -f6 -d' ')" && \
