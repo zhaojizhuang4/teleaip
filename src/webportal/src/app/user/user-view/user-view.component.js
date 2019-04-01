@@ -289,8 +289,83 @@ const toBool = (val) => {
   return (val + '').toLowerCase() === 'true';
 }
 
-const addUser = () => {
+const addUser = (username, password, admin, vc, githubPAT) => {
+  let deferredObject = $.Deferred();
+  userAuth.checkToken((token) => {
+    createUserRequest = $.ajax({
+      url: `${webportalConfig.restServerUri}/api/v1/user`,
+      data: {
+        username,
+        password,
+        admin: toBool(admin),
+        modify: false,
+      },
+      type: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      dataType: 'json',
+      success: () => {
+        let reqs = [];
+        if (githubPAT) {
+          let req = $.ajax({
+            url: `${webportalConfig.restServerUri}/api/v1/user/${username}/githubPAT`,
+            data: {
+              githubPAT: githubPAT,
+            },
+            type: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            dataType: 'json'
+          });
+          reqs.push(req);
+        }
+        // Admin user VC update will be executed in rest-server
+        if (!toBool(admin) && vc) {
+          let req = $.ajax({
+            url: `${webportalConfig.restServerUri}/api/v1/user/${username}/virtualClusters`,
+            data: {
+              virtualClusters: vc,
+            },
+            type: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            dataType: 'json'
+          });
+          reqs.push(req);
+        }
+        $.when(...reqs).then(
+          () => {
+            deferredObject.resolve(`User ${username} created successfully`);
+          },
+          (xhr) => {
+            const res = JSON.parse(xhr.responseText);
+            deferredObject.resolve(`User ${username} created successfully but failed when update other info: ${res.message}`);
+          }
+        )
+      },
+      error: (xhr, textStatus, error) => {
+        const res = JSON.parse(xhr.responseText);
+        deferredObject.resolve(`User ${username} created failed: ${res.message}`);
+      },
+    });
+  });
+  return deferredObject.promise();
+}
 
+const checkUserInfoCSVFormat = (csvResult) => {
+  let fields = csvResult.meta.fields;
+  if (!fields.includes(columnUsername)) {
+    alert('Missing column of username in the CSV file!');
+    return false;
+  }
+  if (!fields.includes(columnPassword)) {
+    alert('Missing column of password in the CSV file!');
+    return false;
+  }
+  return true;
 }
 
 const importFromCSV = () => {
@@ -302,14 +377,27 @@ const importFromCSV = () => {
     let reader = new FileReader();
     reader.onload = function (e) {
       let contents = e.target.result;
-      let result = csvParser.parse(stripBom(contents), {
+      let csvResult = csvParser.parse(stripBom(contents), {
         header: true,
         skipEmptyLines: true
       })
-      result.data.forEach(element => {
-        element[columnAdmin] = toBool(element[columnAdmin]);
-      });
-      console.log(result);
+      // csvResult.data.forEach(element => {
+      //   element[columnAdmin] = toBool(element[columnAdmin]);
+      // });
+      console.log(csvResult);
+      if (checkUserInfoCSVFormat(csvResult)) {
+        let tasks = [];
+        csvResult.data.forEach((user)=>{
+          tasks.push(addUser(user[columnUsername],
+            user[columnPassword],
+            user[columnAdmin],
+            user[columnVC],
+            user[columnGithubPAT]))
+        });
+        $.when(...tasks).always((...data) => {
+            console.log(data);
+          });
+      }
       document.body.removeChild(fileInput);
     }
     reader.readAsText(file);
