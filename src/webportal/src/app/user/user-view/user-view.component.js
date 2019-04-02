@@ -355,6 +355,28 @@ const addUser = (username, password, admin, vc, githubPAT) => {
   return deferredObject.promise();
 }
 
+const addUserRecursively = (userInfos, index, results) => {
+  if (index == 0) {
+    loading.showLoading();
+  }
+  if (index >= userInfos.length) {
+    loading.hideLoading();
+    alert(results.join('\r\n'));
+    window.location.reload();
+  } else {
+    let userInfo = userInfos[index];
+    addUser(userInfo[columnUsername],
+      userInfo[columnPassword],
+      userInfo[columnAdmin],
+      userInfo[columnVC],
+      userInfo[columnGithubPAT])
+      .then((result) => {
+        results.push(result);
+        addUserRecursively(userInfos, ++index, results);
+      })
+  }
+}
+
 const checkUserInfoCSVFormat = (csvResult) => {
   let fields = csvResult.meta.fields;
   if (!fields.includes(columnUsername)) {
@@ -363,6 +385,14 @@ const checkUserInfoCSVFormat = (csvResult) => {
   }
   if (!fields.includes(columnPassword)) {
     alert('Missing column of password in the CSV file!');
+    return false;
+  }
+  if (csvResult.errors.length > 0) {
+    alert(`Row ${csvResult.errors[0].row + 2}: ${csvResult.errors[0].message}`);
+    return false;
+  }
+  if (csvResult.data.length == 0) {
+    alert("Empty CSV file");
     return false;
   }
   return true;
@@ -381,22 +411,9 @@ const importFromCSV = () => {
         header: true,
         skipEmptyLines: true
       })
-      // csvResult.data.forEach(element => {
-      //   element[columnAdmin] = toBool(element[columnAdmin]);
-      // });
-      console.log(csvResult);
       if (checkUserInfoCSVFormat(csvResult)) {
-        let tasks = [];
-        csvResult.data.forEach((user)=>{
-          tasks.push(addUser(user[columnUsername],
-            user[columnPassword],
-            user[columnAdmin],
-            user[columnVC],
-            user[columnGithubPAT]))
-        });
-        $.when(...tasks).always((...data) => {
-            console.log(data);
-          });
+        let results = [];
+        addUserRecursively(csvResult.data, 0, results);
       }
       document.body.removeChild(fileInput);
     }
