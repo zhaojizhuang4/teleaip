@@ -98,6 +98,7 @@ RUN apt-get -y update && \
         libiberty-dev \
         libunwind8-dev \
         binutils-dev && \
+    for TOOL in g++ gcc gcc-ar gcc-nm gcc-ranlib gcov; do ln -sf $TOOL-5 /usr/bin/$TOOL; done && \
     pip install subprocess32 && \
     add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
     mkdir -p $STAGE_DIR
