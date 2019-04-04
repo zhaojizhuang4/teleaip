@@ -18,15 +18,23 @@
 package com.microsoft.frameworklauncher.common.exit;
 
 /**
- * ExitStatusKey is used as the exit code of all internal components.
- * It should be within range [0, 0], [170, 255] without conflicts with each others,
- * because Unix and its derivatives only support exit code in range [0, 255].
+ * Predefined ExitCode for User Framework exit:
+ * It should be within range [-299, 0] to avoid conflicts with all the possible
+ * Failure ExitCode [1, 255] which is got from User Container exit.
+ *
+ * Notes:
+ * 1. Configured Failure ExitCode for User Container exit:
+ *    See UserContainerExitCodeSpec.
+ * 2. Predefined ExitCode for Launcher itself exit:
+ *    See GlobalConstants.
  */
 public enum ExitStatusKey {
+  // [0, 0]:
+  // Success ExitCode which is issued from User Container
   SUCCEEDED(0),
-  LAUNCHER_INTERNAL_TRANSIENT_ERROR(171),
-  LAUNCHER_INTERNAL_NON_TRANSIENT_ERROR(172),
-  LAUNCHER_INTERNAL_UNKNOWN_ERROR(173),
+
+  // [-199, -100]:
+  // Failure ExitCode which is issued from FrameworkLauncher Service
   LAUNCHER_REPORT_UNRETRIEVABLE(174),
   LAUNCHER_DIAGNOSTICS_UNRETRIEVABLE(175),
   LAUNCHER_DIAGNOSTICS_PARSE_ERROR(176),
@@ -37,12 +45,15 @@ public enum ExitStatusKey {
   LAUNCHER_SUBMIT_APP_NON_TRANSIENT_ERROR(181),
   LAUNCHER_STOP_FRAMEWORK_REQUESTED(214),
   AM_KILLED_BY_USER(182),
+  AM_RM_RESYNC_LOST(186),
+  AM_RM_RESYNC_EXCEED(187),
+
+  // [-299, -200]:
+  // Failure ExitCode which is issued from FrameworkLauncher AM
   AM_INTERNAL_TRANSIENT_NORMAL_ERROR(183),
   AM_INTERNAL_TRANSIENT_CONFLICT_ERROR(215),
   AM_INTERNAL_NON_TRANSIENT_ERROR(184),
   AM_INTERNAL_UNKNOWN_ERROR(185),
-  AM_RM_RESYNC_LOST(186),
-  AM_RM_RESYNC_EXCEED(187),
   CONTAINER_INVALID_EXIT_STATUS(188),
   CONTAINER_NOT_AVAILABLE_EXIT_STATUS(213),
   CONTAINER_ABORTED(189),
@@ -65,10 +76,7 @@ public enum ExitStatusKey {
   USER_APP_NON_TRANSIENT_ERROR(206),
   USER_APP_FORCE_KILLED(207),
   USER_APP_TERMINATED(208),
-  USER_APP_LOST(209),
-  AGENT_INTERNAL_TRANSIENT_ERROR(210),
-  AGENT_INTERNAL_NON_TRANSIENT_ERROR(211),
-  AGENT_INTERNAL_UNKNOWN_ERROR(212);
+  USER_APP_LOST(209);
 
   private final int key;
 

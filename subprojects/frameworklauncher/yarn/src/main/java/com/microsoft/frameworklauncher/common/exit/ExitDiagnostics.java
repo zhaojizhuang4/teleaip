@@ -60,15 +60,6 @@ public class ExitDiagnostics {
     /// Launcher ExitStatus
     /// </summary>
     ///
-    DEF.put(ExitStatusKey.LAUNCHER_INTERNAL_TRANSIENT_ERROR, new ExitStatusValue(
-        ExitStatusKey.LAUNCHER_INTERNAL_TRANSIENT_ERROR.toInt(),
-        "Launcher internal transient error", ExitType.TRANSIENT_NORMAL));
-    DEF.put(ExitStatusKey.LAUNCHER_INTERNAL_NON_TRANSIENT_ERROR, new ExitStatusValue(
-        ExitStatusKey.LAUNCHER_INTERNAL_NON_TRANSIENT_ERROR.toInt(),
-        "Launcher internal non-transient error", ExitType.NON_TRANSIENT));
-    DEF.put(ExitStatusKey.LAUNCHER_INTERNAL_UNKNOWN_ERROR, new ExitStatusValue(
-        ExitStatusKey.LAUNCHER_INTERNAL_UNKNOWN_ERROR.toInt(),
-        "Launcher internal unknown error", ExitType.UNKNOWN));
     // Launcher External Error is defined to be TransientError
     DEF.put(ExitStatusKey.LAUNCHER_REPORT_UNRETRIEVABLE, new ExitStatusValue(
         ExitStatusKey.LAUNCHER_REPORT_UNRETRIEVABLE.toInt(),
@@ -223,20 +214,6 @@ public class ExitDiagnostics {
         154,
         "UserApplication exited but its exitcode cannot be found in exitcode file, " +
             "maybe machine unexpected shutdown, disk cleaned up or disk failed", ExitType.TRANSIENT_NORMAL));
-
-    /// <summary>
-    /// Agent ExitStatus
-    /// </summary>
-    ///
-    DEF.put(ExitStatusKey.AGENT_INTERNAL_TRANSIENT_ERROR, new ExitStatusValue(
-        ExitStatusKey.AGENT_INTERNAL_TRANSIENT_ERROR.toInt(),
-        "Agent internal transient error", ExitType.TRANSIENT_NORMAL));
-    DEF.put(ExitStatusKey.AGENT_INTERNAL_NON_TRANSIENT_ERROR, new ExitStatusValue(
-        ExitStatusKey.AGENT_INTERNAL_NON_TRANSIENT_ERROR.toInt(),
-        "Agent internal non-transient error", ExitType.NON_TRANSIENT));
-    DEF.put(ExitStatusKey.AGENT_INTERNAL_UNKNOWN_ERROR, new ExitStatusValue(
-        ExitStatusKey.AGENT_INTERNAL_UNKNOWN_ERROR.toInt(),
-        "Agent internal unknown error", ExitType.UNKNOWN));
 
     EXIT_STATUS_DEFINITION = Collections.unmodifiableMap(DEF);
   }
