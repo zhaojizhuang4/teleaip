@@ -1,0 +1,16 @@
+{
+  "jobName": "hdfs_upload_test",
+  "image": "mzmssg/hdfs_upload_test",
+
+
+  "taskRoles": [
+    {
+      "name": "hdfs_upload",
+      "taskNumber": 1,
+      "cpuNumber": 4,
+      "memoryMB": 16384,
+      "gpuNumber": 0,
+      "command": "hdfs_addr=$(sed -e \"s@hdfs://@@g\" <<< $PAI_DEFAULT_FS_URI) && mnt_point=/workspace/hdfs && mkdir -p $mnt_point && hdfs-mount $hdfs_addr $mnt_point & && sleep infinity"
+    }
+  ]
+}
