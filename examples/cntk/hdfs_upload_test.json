@@ -1,6 +1,6 @@
 {
   "jobName": "hdfs_upload_test",
-  "image": "mzmssg/hdfs_upload_test",
+  "image": "openpai/pai.example.cntk",
 
 
   "taskRoles": [
@@ -10,7 +10,7 @@
       "cpuNumber": 4,
       "memoryMB": 16384,
       "gpuNumber": 0,
-      "command": "hdfs_addr=$(sed -e \"s@hdfs://@@g\" <<< $PAI_DEFAULT_FS_URI) && mnt_point=/workspace/hdfs && mkdir -p $mnt_point && hdfs-mount $hdfs_addr $mnt_point & && sleep infinity"
+      "command": "hdfs_addr=$(sed -e \"s@hdfs://@@g\" <<< $PAI_DEFAULT_FS_URI) && mnt_point=/workspace/hdfs && mkdir -p $mnt_point && {hdfs-mount $hdfs_addr $mnt_point &} && while :; do cp -r /workspace/hdfs/zimiao/test_file ~/; sleep 10; mv ~/test_file /workspace/hdfs/zimiao/test_file_upload; sleep 10; rm -r /workspace/hdfs/zimiao/test_file_upload; sleep 10; done"
     }
   ]
 }
