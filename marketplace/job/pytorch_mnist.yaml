@@ -29,7 +29,7 @@ prerequisites :
     name : pytorch_examples
     type : script
     version : 1.0.0
-    contributor : Qi Chen
+    contributor : Qi Chen && panlin
     description: pytorch examples
     uri : https://github.com/pytorch/examples
     usage:
@@ -45,6 +45,6 @@ prerequisites :
     name : pytorch_example
     type : dockerimage
     version : 1.0.0
-    contributor : Qi Chen
+    contributor : Qi Chen && panlin
     description: python3.5, pytorch
-    uri : openpai/pai.example.pytorch
+    uri : 192.168.19.31/teleaip/teleaip.example.pytorch
