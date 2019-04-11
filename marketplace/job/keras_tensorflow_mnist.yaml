@@ -2,7 +2,7 @@ protocol_version: v2
 name : keras_tensorflow_mnist
 type : job
 version : 1.0.0
-contributor : Yanli
+contributor : Yanli && panlin
 description : keras, tensorflow, mnist
 retryCount: 0 
 
@@ -23,4 +23,4 @@ prerequisites :
     version : 1.0.0
     contributor : Yanli
     description: keras, tensorflow
-    uri : openpai/pai.example.keras.tensorflow
+    uri : 192.168.19.31/teleaip/teleaip.example.keras.tensorflow
