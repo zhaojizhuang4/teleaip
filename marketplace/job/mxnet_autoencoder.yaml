@@ -2,7 +2,7 @@ protocol_version: v2
 name : mxnet_autoencoder
 type : job
 version : 1.0.0
-contributor : Yanli
+contributor : Yanli && panlin
 description : mxnet, autoencoder
 retryCount: 0 
 
@@ -21,6 +21,6 @@ prerequisites :
     name : mxnet
     type : dockerimage
     version : 1.0.0
-    contributor : Yanli
+    contributor : Yanli && panlin
     description: mxnet
-    uri : openpai/pai.example.mxnet
+    uri : 192.168.19.31/teleaip/teleaip.example.mxnet
