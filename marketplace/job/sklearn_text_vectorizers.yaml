@@ -2,7 +2,7 @@ protocol_version: v2
 name : sklearn_text_vectorizers
 type : job
 version : 1.0.0
-contributor : Yanli
+contributor : Yanli &&  panlin
 description : sklearn, text vectorizers
 retryCount: 0 
 
@@ -21,6 +21,6 @@ prerequisites :
     name : sklearn
     type : dockerimage
     version : 1.0.0
-    contributor : Yanli
+    contributor : Yanli && panlin
     description: sklearn
-    uri : openpai/pai.example.sklearn
+    uri : 192.168.19.31/teleaip/teleaip.example.sklearn
