@@ -4,4 +4,4 @@ type : dockerimage
 version : 1.0.0
 contributor : Yanli
 description: caffe2
-uri : openpai/pai.example.caffe2
+uri : 192.168.19.31/teleaip/teleaip.example.caffe2
